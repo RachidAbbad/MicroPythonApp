@@ -4,6 +4,7 @@ import android.widget.Toast;
 
 import com.rachid_abbad.micropythonapp.activities.MainActivity;
 import com.rachid_abbad.micropythonapp.models.DataModel;
+import com.rachid_abbad.micropythonapp.utils.LoadingDialog;
 import com.rachid_abbad.micropythonapp.utils.Urls;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 import okhttp3.Call;
@@ -72,7 +75,7 @@ public class DataProvider {
         return dataModel;
     }
 
-    public static void controlLed(int stat) {
+    public static void controlLed(int stat, LoadingDialog loadingDialog) {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -87,12 +90,17 @@ public class DataProvider {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        loadingDialog.dismiss();
+                    }
+                },4000);
             }
         });
     }
 
-    public static void controlAlert(int stat) {
+    public static void controlAlert(int stat,LoadingDialog loadingDialog) {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -107,6 +115,12 @@ public class DataProvider {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        loadingDialog.dismiss();
+                    }
+                },4000);
 
             }
         });
